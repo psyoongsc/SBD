@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+   <children>
+      <Pane prefHeight="300.0" prefWidth="500.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="120.0" layoutX="6.0" layoutY="6.0" stroke="BLACK" strokeType="INSIDE" width="488.0" />
+            <Label layoutX="212.0" layoutY="59.0" text="(그림 넣는 곳)" />
+            <Label fx:id="labelID" layoutX="120.0" layoutY="165.0" text="아이디" />
+            <Label fx:id="labelPW" layoutX="114.0" layoutY="194.0" text="비밀번호" />
+            <TextField fx:id="txtID" layoutX="183.0" layoutY="161.0" prefHeight="23.0" prefWidth="210.0" />
+            <TextField fx:id="txtPW" layoutX="183.0" layoutY="190.0" prefHeight="23.0" prefWidth="210.0" />
+            <Button fx:id="btnLogin" layoutX="108.0" layoutY="219.0" mnemonicParsing="false" onAction="#onBtnLoginClicked" prefHeight="23.0" prefWidth="284.0" text="로그인" />
+            <Hyperlink fx:id="btnRegister" layoutX="337.0" layoutY="242.0" onAction="#onBtnRegisterClicked" text="회원가입" />
+         </children>
+      </Pane>
+   </children>
+</HBox>

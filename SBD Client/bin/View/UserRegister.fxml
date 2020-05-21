@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.UserRegisterController">
+   <children>
+      <Pane prefHeight="300.0" prefWidth="400.0">
+         <children>
+            <TextField fx:id="txtID" layoutX="66.0" layoutY="14.0" />
+            <TextField fx:id="txtPW" layoutX="66.0" layoutY="52.0" />
+            <TextField fx:id="txtName" layoutX="66.0" layoutY="90.0" />
+            <TextField fx:id="txtPhone" layoutX="66.0" layoutY="197.0" />
+            <ComboBox fx:id="comboAddr1" layoutX="66.0" layoutY="232.0" onAction="#onComboAddr1Change" prefWidth="150.0" />
+            <ComboBox fx:id="comboAddr2" layoutX="231.0" layoutY="232.0" prefWidth="150.0" />
+            <Label layoutX="14.0" layoutY="18.0" text="ID" />
+            <Label layoutX="14.0" layoutY="56.0" text="PW" />
+            <Label layoutX="14.0" layoutY="94.0" text="이름" />
+            <Label layoutX="14.0" layoutY="132.0" text="성별" />
+            <Label layoutX="14.0" layoutY="167.0" text="생년월일" />
+            <Label layoutX="14.0" layoutY="201.0" text="연락처" />
+            <Label layoutX="14.0" layoutY="236.0" text="주소" />
+            <Button fx:id="btnRegister" layoutX="168.0" layoutY="263.0" mnemonicParsing="false" onAction="#onBtnRegisterClicked" text="가입하기" />
+            <ComboBox fx:id="comboSex" layoutX="66.0" layoutY="128.0" prefHeight="23.0" prefWidth="137.0" />
+            <DatePicker fx:id="dateBirthday" layoutX="66.0" layoutY="163.0" prefHeight="23.0" prefWidth="137.0" />
+         </children>
+      </Pane>
+   </children>
+</HBox>
