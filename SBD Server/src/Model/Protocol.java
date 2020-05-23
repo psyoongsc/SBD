@@ -46,6 +46,7 @@ public class Protocol {
 	final static public int T5_CD10_DIALOGUE = 10;
 	final static public int T5_CD11_ADDRESS = 11;
 	final static public int T5_CD12_ADDRESSSPECIFIC = 12;
+	final static public int T5_CD13_GYM = 13;
 	
 	final static public int T6_FAIL = -1;
 	final static public int T6_CD0_USERINFO = 0;
@@ -61,6 +62,26 @@ public class Protocol {
 	final static public int T6_CD10_DIALOGUE = 10;
 	final static public int T6_CD11_ADDRESS = 11;
 	final static public int T6_CD12_ADDRESSSPECIFIC = 12;
+	final static public int T6_CD13_GYM = 13;
+	
+	final static public int T7_CD0_USERINFO = 0;
+	final static public int T7_CD1_TEAMINFO = 1;
+	final static public int T7_CD2_TEAMNOTICE = 2;
+	final static public int T7_CD3_TEAMRECRUIT = 3;
+	
+	final static public int T8_CD0_FAIL = -1;
+	final static public int T8_CD1_SUCCESS = 1;
+	
+	final static public int T9_CD0_USER = 0;
+	final static public int T9_CD1_TEAM = 1;
+	final static public int T9_CD2_TEAMNOTICE = 2;
+	final static public int T9_CD3_TEAMUSER = 3;
+	final static public int T9_CD4_TEAMRECRUIT = 4;
+	final static public int T9_CD5_TEAMAPPLICATION = 5;
+	final static public int T9_CD6_DIALOGUE = 6;
+	
+	final static public int T10_CD0_FAIL = -1;
+	final static public int T10_CD1_SUCCESS = 1;
 	
 	// Type 7~10 Code 추가되어야 함
 	
