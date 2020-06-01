@@ -127,19 +127,16 @@ public class MainServer implements Runnable {
 				System.out.println(ID + " : Request Register User");
 				rh.CODE0(p);
 				break;
-			case Protocol.T5_CD12_ADDRESSSPECIFIC:
-				System.out.println(ID + " : Request View Address Specific");
-				vh.CODE12(p);
 			}
 		case Protocol.TYPE5_VIEW_REQ:
 			switch(p.getCode()) {
-			case Protocol.T5_CD11_ADDRESS:
+			case Protocol.T5_CD10_ADDRESS:
 				System.out.println(ID + " : Request View Address");
-				vh.CODE11(p);
+				vh.CODE10(p);
 				break;
-			case Protocol.T5_CD12_ADDRESSSPECIFIC:
+			case Protocol.T5_CD11_ADDRESSSPECIFIC:
 				System.out.println(ID + " : Request View Address Specific");
-				vh.CODE12(p);
+				vh.CODE11(p);
 			}
 		}
 	}

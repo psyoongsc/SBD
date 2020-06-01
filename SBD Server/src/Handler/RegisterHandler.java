@@ -143,7 +143,7 @@ public class RegisterHandler {
 		
 		String[] temp = (new String(protocol.getBody())).trim().split("/");
 		
-		String sql = "insert into recruit(Team_ID, Note, Date_Req, Date_Post, Date_End) "
+		String sql = "insert into recruit(Team_ID, Note, Date_Req, Due_Date) " // sql 변경되어야함
 						+ "values(?, ?, ?, ?, ?)";
 		
 		try {
@@ -151,8 +151,7 @@ public class RegisterHandler {
 			pstmt.setInt(1, Integer.parseInt(temp[0]));
 			pstmt.setString(2, temp[1]);
 			pstmt.setDate(3, new Date(new java.util.Date().getDate()));
-			pstmt.setDate(4, Date.valueOf(temp[2]));
-			pstmt.setDate(5, Date.valueOf(temp[3]));
+			pstmt.setInt(4, Integer.parseInt(temp[2]));
 			
 			rowsAffected = pstmt.executeUpdate();
 		} catch(SQLException sqle) {
@@ -248,7 +247,7 @@ public class RegisterHandler {
 		
 		String[] temp = (new String(protocol.getBody())).trim().split("/");
 		
-		String sql = "insert into match_application(Team_ID, AvailableStart, AvailableEnd, Status) "
+		String sql = "insert into match_application(Team_ID, AvailableStart, AvailableEnd, Match_Gym, Status) "
 						+ "values(?,?,?,?)";
 		
 		try {
@@ -256,7 +255,8 @@ public class RegisterHandler {
 			pstmt.setInt(1, Integer.parseInt(temp[0]));
 			pstmt.setTimestamp(2, Timestamp.valueOf(temp[1]));
 			pstmt.setTimestamp(3, Timestamp.valueOf(temp[2]));
-			pstmt.setInt(4, 1);
+			pstmt.setInt(4, Integer.parseInt(temp[3]));
+			pstmt.setInt(5, 1);
 			
 			rowsAffected = pstmt.executeUpdate();
 		} catch(SQLException sqle) {
@@ -283,17 +283,15 @@ public class RegisterHandler {
 		
 		String[] temp = (new String(protocol.getBody())).trim().split("/");
 		
-		String sql = "insert into dialogue(Push_Type, Match_ID, Sender, Reciever, Note, datetime) "
-						+ "values(?,?,?,?,?,?)";
+		String sql = "update match_game set Status=? where Recruit_ID=? and User_ID=?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);	
 			pstmt.setInt(1, Integer.parseInt(temp[0]));
-			pstmt.setInt(2, Integer.parseInt(temp[1]));
-			pstmt.setString(3, temp[2]);
-			pstmt.setString(4, temp[3]);
-			pstmt.setString(5, temp[4]);
-			pstmt.setTimestamp(6, new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			pstmt.setTimestamp(2, Timestamp.valueOf(temp[1]));
+			pstmt.setTimestamp(3, Timestamp.valueOf(temp[2]));
+			pstmt.setInt(4, Integer.parseInt(temp[3]));
+			pstmt.setInt(5, 1);
 			
 			rowsAffected = pstmt.executeUpdate();
 		} catch(SQLException sqle) {
