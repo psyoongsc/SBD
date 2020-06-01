@@ -1,24 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.shape.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
    <children>
-      <Pane prefHeight="300.0" prefWidth="500.0">
+      <Pane layoutY="-3.0" prefHeight="430.0" prefWidth="628.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="120.0" layoutX="6.0" layoutY="6.0" stroke="BLACK" strokeType="INSIDE" width="488.0" />
-            <Label layoutX="212.0" layoutY="59.0" text="(그림 넣는 곳)" />
-            <Label fx:id="labelID" layoutX="120.0" layoutY="165.0" text="아이디" />
-            <Label fx:id="labelPW" layoutX="114.0" layoutY="194.0" text="비밀번호" />
-            <TextField fx:id="txtID" layoutX="183.0" layoutY="161.0" prefHeight="23.0" prefWidth="210.0" />
-            <TextField fx:id="txtPW" layoutX="183.0" layoutY="190.0" prefHeight="23.0" prefWidth="210.0" />
-            <Button fx:id="btnLogin" layoutX="108.0" layoutY="219.0" mnemonicParsing="false" onAction="#onBtnLoginClicked" prefHeight="23.0" prefWidth="284.0" text="로그인" />
-            <Hyperlink fx:id="btnRegister" layoutX="337.0" layoutY="242.0" onAction="#onBtnRegisterClicked" text="회원가입" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#15a186" height="449.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="326.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#4bc240" height="449.0" layoutX="311.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="333.0" />
+            <Label layoutX="169.0" layoutY="228.0" text="ID" textFill="WHITE">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="166.0" layoutY="277.0" text="PW" textFill="WHITE">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtID" layoutX="209.0" layoutY="226.0" />
+            <TextField fx:id="txtPW" layoutX="209.0" layoutY="275.0" />
+            <Button fx:id="btnLogin" layoutX="407.0" layoutY="232.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="84.0" style="-fx-background-color: white;" text="LOGIN" textFill="#4bc240">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnRegister" layoutX="491.0" layoutY="368.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="102.0" style="-fx-background-color: white;" text="SIGN UP" textFill="#4bc240">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="225.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../image/SBD-white.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>
-</HBox>
+</AnchorPane>

@@ -1,184 +1,215 @@
 package Controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import Model.Protocol;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import application.Network;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 
 public class UserRegisterController implements Initializable {
-	Protocol protocol;
-	OutputStream os;
-	InputStream is;
-	ObservableList<String> Addr1List = FXCollections.observableArrayList();
-	ObservableList<String> Addr2List = FXCollections.observableArrayList();
 	
-    @FXML
-    private TextField txtPhone;
-
-    @FXML
-    private ComboBox<String> comboAddr1;
-
-    @FXML
-    private DatePicker dateBirthday;
-
-    @FXML
-    private TextField txtID;
-
-    @FXML
-    private ComboBox<String> comboAddr2;
-
-    @FXML
-    private TextField txtName;
-
-    @FXML
-    private ComboBox<String> comboSex;
-
-    @FXML
-    private TextField txtPW;
-
-    @FXML
-    private Button btnRegister;
-	
-	public void initializer(Protocol _protocol, OutputStream _os, InputStream _is) {
-		protocol = _protocol;
-		os = _os;
-		is = _is;
+	@FXML private Button login;
+	@FXML private TextField id;
+	@FXML private Button check;
+	@FXML private TextField pw;
+	@FXML private TextField name;
+	@FXML private ToggleGroup sex;
+	@FXML private DatePicker birthday;
+	@FXML private TextField phone;
+	@FXML private ComboBox addr1;
+	@FXML private ComboBox addr2;
+	@FXML private Button register;
+    
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
 		
-        Protocol reqPacket = new Protocol(Protocol.TYPE5_VIEW_REQ, Protocol.T5_CD11_ADDRESS);
-        try {
-			os.write(reqPacket.getPacket());
-			os.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        byte[] packet = new byte[Protocol.LEN_PROTOCOL_MAX];
-        try {
-			is.read(packet);
-			Protocol resPacket = new Protocol();
-			resPacket.setPakcet(packet);
-			
-			String[] temp = (new String(resPacket.getBody())).trim().split("/");
-			
-			for(int i=0; i<temp.length; i++) {
-				Addr1List.add(temp[i]);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		login.setOnAction(event->{
+			handleLoginAction(event);
+		});
+		
+		check.setOnAction(event ->{
+			handleCheckAction(event);
+		});
+		
+		register.setOnAction(event ->{
+			handleRegisterAction(event);
+		});
+		
+		addr1.setOnMouseClicked(event ->{
+			handleAddr1Action(event);
+		});
+		
+		addr2.setOnMouseClicked(event ->{
+			handleAddr2Action(event);
+		});
+	}
+	
+	
+	
+	public void handleLoginAction(ActionEvent event){
+		try{
+			Parent Login = FXMLLoader.load(getClass().getResource("../View/Login.fxml"));
+			Scene scene = new Scene(Login);
+			Stage primaryStage = (Stage)login.getScene().getWindow();
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("로그인");
+		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	
-	@Override
-    public void initialize(URL location, ResourceBundle resources) {
-		comboAddr1.setItems(Addr1List);
-		comboSex.getItems().addAll("남", "여");
-    }
+	public void handleCheckAction(ActionEvent event){
+		try{
+			String ID = id.getText().trim();
+			
+			Check.isFill(ID);
+
+			Protocol p = new Protocol();
+			// message passing - send
+			//p.setType();
+			p.setBody((ID).getBytes());
+			Network.os.write(p.getPacket());
+			Network.os.flush();
+
+			// message passing - receive
+			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
+			Network.is.read(buf);
+			p.setPakcet(buf);
+			int packetType = p.getType();
+
+//			switch (packetType) {
+//			case Protocol.T2_CD0_FAIL:
+//				Alert alert = new Alert(AlertType.WARNING);
+//				alert.setTitle("Warning");
+//				alert.setHeaderText("Warning!!");
+//				alert.setContentText("Please fill Login Info Correctly.");
+//				alert.showAndWait();
+//				break;
+//			case Protocol.T2_CD1_SUCCESS:
+//				alert = new Alert(AlertType.INFORMATION);
+//				alert.setTitle("Information");
+//				alert.setHeaderText("Login Success");
+//				alert.setContentText("Welcome");
+//				alert.showAndWait();
+//				break;
+//			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
-    @FXML
-    void onComboAddr1Change(ActionEvent event) {
-    	Protocol reqPacket = new Protocol(Protocol.TYPE5_VIEW_REQ, Protocol.T5_CD12_ADDRESSSPECIFIC);
-        try {
-        	reqPacket.setBody(comboAddr1.getValue().trim().getBytes());
-			os.write(reqPacket.getPacket());
-			os.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+	public void handleRegisterAction(ActionEvent event){
+		try{
+			String ID = id.getText().trim();
+			String PW = pw.getText().trim();
+			String NAME = name.getText().trim();
+			String SEX = (String) sex.getSelectedToggle().getUserData();
+			String BIRTHDAY = birthday.getValue().toString();
+			String PHONE = phone.getText().trim();
+			String ADDR1 = (String) addr1.getValue();
+			String ADDR2 = (String) addr2.getValue();
+			
+			Check.isFill(ID,PW,NAME,SEX,BIRTHDAY, PHONE, ADDR1, ADDR2);
+			
+			String body = ID + PW + NAME + SEX + BIRTHDAY + PHONE + ADDR1 + ADDR2;
+			
+			Protocol p = new Protocol();
+			// message passing - send
+			//p.setType();
+			p.setBody(body.getBytes());
+			Network.os.write(p.getPacket());
+			Network.os.flush();
+
+			// message passing - receive
+			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
+			Network.is.read(buf);
+			p.setPakcet(buf);
+			int packetType = p.getType();
+
+//			switch (packetType) {
+//			case Protocol.T2_CD0_FAIL:
+//				Alert alert = new Alert(AlertType.WARNING);
+//				alert.setTitle("Warning");
+//				alert.setHeaderText("Warning!!");
+//				alert.setContentText("Please fill Login Info Correctly.");
+//				alert.showAndWait();
+//				break;
+//			case Protocol.T2_CD1_SUCCESS:
+//				alert = new Alert(AlertType.INFORMATION);
+//				alert.setTitle("Information");
+//				alert.setHeaderText("Login Success");
+//				alert.setContentText("Welcome");
+//				alert.showAndWait();
+//				break;
+//			}
+			
+		}catch(Exception e){
 			e.printStackTrace();
 		}
-        
-        byte[] packet = new byte[Protocol.LEN_PROTOCOL_MAX];
-        try {
-			is.read(packet);
-			Protocol resPacket = new Protocol();
-			resPacket.setPakcet(packet);
-			
-			String[] temp = (new String(resPacket.getBody())).trim().split("/");
-			Addr2List = FXCollections.observableArrayList();
-			
-			for(int i=0; i<temp.length; i++) {
-				Addr2List.add(temp[i]);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        comboAddr2.getItems().clear();
-        comboAddr2.getItems().addAll(Addr2List);
-    }
+	}
 	
-    @FXML
-    void onBtnRegisterClicked(ActionEvent event) {
-    	String userID = txtID.getText().trim();
-    	String userPW = txtPW.getText().trim();
-    	String userName = txtName.getText().trim();
-    	String userSex = comboSex.getValue().trim();
-    	LocalDate userBirthday = dateBirthday.getValue();
-    	String userPhone = txtPhone.getText().trim();
-    	String userAddr1 = comboAddr1.getValue();
-    	String userAddr2 = comboAddr2.getValue();
-    	
-    	System.out.printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
-    			, userID, userPW, userName, userSex, userBirthday, userPhone, userAddr1, userAddr2);
-    	
-        Protocol reqPacket = new Protocol(Protocol.TYPE3_REGISTER_REQ, Protocol.T3_CD0_USER);
-        try {
-        	reqPacket.setBody((userID + "/" + userPW + "/" + userName + "/" + userSex + "/" + userBirthday
-        			 + "/" + userPhone + "/" + userAddr1 + "/" + userAddr2).getBytes());
-			os.write(reqPacket.getPacket());
-			os.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        byte[] packet = new byte[Protocol.LEN_PROTOCOL_MAX];
-        try {
-			is.read(packet);
-			Protocol resPacket = new Protocol();
-			resPacket.setPakcet(packet);
+	public void handleAddr1Action(MouseEvent event){
+		try{
 			
-			if(resPacket.getCode() == Protocol.T4_CD1_SUCCESS) {
-				Alert alert = new Alert(AlertType.INFORMATION);
-	    		alert.setTitle("Information");
-	    		alert.setHeaderText("Register Success");
-	    		alert.setContentText("Please Login");
-	    		
-	    		alert.showAndWait();
-			} else {
-				Alert alert = new Alert(AlertType.WARNING);
-	    		alert.setTitle("Warning");
-	    		alert.setHeaderText("Warning!!");
-	    		alert.setContentText("Please fill Register Info Correctly.");
-	    		
-	    		alert.showAndWait();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Protocol p = new Protocol();
+			// message passing - send
+			//p.setType();
+			//p.setBody();
+			Network.os.write(p.getPacket());
+			Network.os.flush();
+
+			// message passing - receive
+			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
+			Network.is.read(buf);
+			p.setPakcet(buf);
+			int packetType = p.getType();
+
+			//combobox에 추가하기
+			
+		}catch(Exception e){
 			e.printStackTrace();
 		}
-    }
+	}
+	
+	public void handleAddr2Action(MouseEvent event){
+		try{
+			
+			Protocol p = new Protocol();
+			// message passing - send
+			//p.setType();
+			//p.setBody();
+			Network.os.write(p.getPacket());
+			Network.os.flush();
+
+			// message passing - receive
+			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
+			Network.is.read(buf);
+			p.setPakcet(buf);
+			int packetType = p.getType();
+
+			//combobox에 추가하기
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
+   <children>
+      <AnchorPane prefHeight="244.0" prefWidth="551.0">
+         <children>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <AnchorPane layoutX="5.0" layoutY="12.0" prefHeight="92.0" prefWidth="532.0">
+                     <children>
+                        <Label layoutX="15.0" layoutY="4.0" text="팀 정보" />
+                        <TextField layoutX="146.0" layoutY="55.0" prefHeight="22.0" prefWidth="379.0" text="팀소개글" />
+                        <TextField layoutX="10.0" layoutY="28.0" prefHeight="22.0" prefWidth="165.0" text="체육관" />
+                        <TextField layoutX="185.0" layoutY="28.0" prefHeight="22.0" prefWidth="165.0" text="나이" />
+                        <TextField layoutX="10.0" layoutY="55.0" prefHeight="22.0" prefWidth="122.0" text="팀이름" />
+                        <TextField layoutX="360.0" layoutY="28.0" prefHeight="22.0" prefWidth="165.0" text="성별" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="111.0" prefHeight="129.0" prefWidth="520.0">
+                     <children>
+                        <Label layoutX="8.0" layoutY="5.0" text="팀원" />
+                        <TableView layoutX="27.0" layoutY="31.0" prefHeight="79.0" prefWidth="454.0">
+                           <columns>
+                              <TableColumn prefWidth="90.0" text="팀장" />
+                              <TableColumn prefWidth="90.0" text="팀원1" />
+                              <TableColumn prefWidth="90.0" text="팀원2" />
+                              <TableColumn prefWidth="90.0" text="팀원3" />
+                              <TableColumn prefWidth="90.0" text="팀원4" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
