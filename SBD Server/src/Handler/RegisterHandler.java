@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -283,17 +284,93 @@ public class RegisterHandler {
 		
 		String[] temp = (new String(protocol.getBody())).trim().split("/");
 		
-		String sql = "update match_game set Status=? where Recruit_ID=? and User_ID=?";
+		String sql = "select b.ID\r\n" + 
+				"from sbd.match_application a, sbd.match_game b\r\n" + 
+				"where a.Team_ID = ? AND a.ID = b.Team_1_Application_ID";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);	
-			pstmt.setInt(1, Integer.parseInt(temp[0]));
-			pstmt.setTimestamp(2, Timestamp.valueOf(temp[1]));
-			pstmt.setTimestamp(3, Timestamp.valueOf(temp[2]));
-			pstmt.setInt(4, Integer.parseInt(temp[3]));
-			pstmt.setInt(5, 1);
+			pstmt.setInt(1, Integer.parseInt(temp[1]));
 			
-			rowsAffected = pstmt.executeUpdate();
+			ResultSet rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				if(temp[2].equals("accept")) {
+					String sql2 = "select Status\r\n" + 
+							"from sbd.match_game\r\n" + 
+							"where ID = ?";
+					PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+					pstmt2.setInt(1, rs.getInt(1));
+					
+					ResultSet rs2 = pstmt2.executeQuery();
+					rs2.next();
+					if(rs2.getInt(1) == 01) {
+						String sql3 = "update sbd.match_game\r\n" + 
+								"set Status = 02 where ID = ?";
+						PreparedStatement pstmt3 = conn.prepareStatement(sql3);
+						pstmt.setInt(1, rs.getInt(1));
+						
+						rowsAffected = pstmt3.executeUpdate();
+					}
+					else if(rs2.getInt(1) == 03) {
+						String sql3 = "update sbd.match_game\r\n" + 
+								"set Status = 06 where ID = ?";
+						PreparedStatement pstmt3 = conn.prepareStatement(sql3);
+						pstmt.setInt(1, rs.getInt(1));
+						
+						rowsAffected = pstmt3.executeUpdate();
+					}
+					else
+					{
+						throw new SQLException();
+					}
+				} else {
+					String sql3 = "update sbd.match_game\r\n" + 
+							"set Status = 04 where ID = ?";
+					PreparedStatement pstmt3 = conn.prepareStatement(sql3);
+					pstmt.setInt(1, rs.getInt(1));
+					
+					rowsAffected = pstmt3.executeUpdate();
+				}
+			} else {
+				if(temp[2].equals("deny")) {
+					String sql2 = "select Status\r\n" + 
+							"from sbd.match_game\r\n" + 
+							"where ID = ?";
+					PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+					pstmt2.setInt(1, rs.getInt(1));
+					
+					ResultSet rs2 = pstmt2.executeQuery();
+					rs2.next();
+					if(rs2.getInt(1) == 01) {
+						String sql3 = "update sbd.match_game\r\n" + 
+								"set Status = 03 where ID = ?";
+						PreparedStatement pstmt3 = conn.prepareStatement(sql3);
+						pstmt.setInt(1, rs.getInt(1));
+						
+						rowsAffected = pstmt3.executeUpdate();
+					}
+					else if(rs2.getInt(1) == 02) {
+						String sql3 = "update sbd.match_game\r\n" + 
+								"set Status = 06 where ID = ?";
+						PreparedStatement pstmt3 = conn.prepareStatement(sql3);
+						pstmt.setInt(1, rs.getInt(1));
+						
+						rowsAffected = pstmt3.executeUpdate();
+					}
+					else
+					{
+						throw new SQLException();
+					}
+				} else {
+					String sql3 = "update sbd.match_game\r\n" + 
+							"set Status = 05 where ID = ?";
+					PreparedStatement pstmt3 = conn.prepareStatement(sql3);
+					pstmt.setInt(1, rs.getInt(1));
+					
+					rowsAffected = pstmt3.executeUpdate();
+				}
+			}
 		} catch(SQLException sqle) {
 			packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD0_FAIL);
 			sqle.printStackTrace();
