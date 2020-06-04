@@ -130,11 +130,11 @@ public class MainServer implements Runnable {
 			}
 		case Protocol.TYPE5_VIEW_REQ:
 			switch(p.getCode()) {
-			case Protocol.T5_CD10_ADDRESS:
+			case Protocol.T5_CD11_ADDRESS:
 				System.out.println(ID + " : Request View Address");
 				vh.CODE10(p);
 				break;
-			case Protocol.T5_CD11_ADDRESSSPECIFIC:
+			case Protocol.T5_CD12_ADDRESSSPECIFIC:
 				System.out.println(ID + " : Request View Address Specific");
 				vh.CODE11(p);
 			}
