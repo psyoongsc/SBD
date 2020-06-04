@@ -60,55 +60,51 @@ public class LoginController implements Initializable {
 	
 	public void handleBtnLoginAction(ActionEvent event){
 		try {
-//			String ID = txtID.getText().trim();
-//			String PW = txtPW.getText().trim();
-//
-//			Check.isFill(ID, PW);
-//
-//			Protocol p = new Protocol();
-//			// message passing - send
-//			// set head
-//			p.setType(Protocol.TYPE1_LOGIN_REQ);
-//			// set body
-//			p.setBody((ID + "/" + PW).getBytes());
-//			// send
-//			Network.os.write(p.getPacket());
-//			Network.os.flush();
-//			// printPakcet
-//			Check.printPacket(p);
-//
-//			// message passing - receive
-//			// read buf
-//			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
-//			Network.is.read(buf);
-//			// set Protocol
-//			p.setPakcet(buf);
-//			// get Type
-//			int packetType = p.getType();
-//			Check.printPacket(p);
-//
-//			switch (packetType) {
-//			case Protocol.T2_CD0_FAIL:
-//				Alert alert = new Alert(AlertType.WARNING);
-//				alert.setTitle("Warning");
-//				alert.setHeaderText("Warning!!");
-//				alert.setContentText("Please fill Login Info Correctly.");
-//				alert.showAndWait();
-//				break;
-//			case Protocol.T2_CD1_SUCCESS:
-//				alert = new Alert(AlertType.INFORMATION);
-//				alert.setTitle("Information");
-//				alert.setHeaderText("Login Success");
-//				alert.setContentText("Welcome");
-//				alert.showAndWait();
-//				break;
-//			}
+			String ID = txtID.getText().trim();
+			String PW = txtPW.getText().trim();
+
+			Check.isFill(ID, PW);
+
+			Protocol p = new Protocol();
+			// message passing - send
+			// set head
+			p.setType(Protocol.TYPE1_LOGIN_REQ);
+			// set body
+			p.setBody((ID + "/" + PW).getBytes());
+			// send
+			Network.os.write(p.getPacket());
+			Network.os.flush();
+			// printPakcet
+			Check.printPacket(p);
+
+			// message passing - receive
+			// read buf
+			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
+			Network.is.read(buf);
+			// set Protocol
+			p.setPakcet(buf);
+			// get Type
+			int packetType = p.getType();
+			Check.printPacket(p);
+
+			switch (packetType) {
+			case Protocol.T2_CD0_FAIL:
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Warning");
+				alert.setHeaderText("Warning!!");
+				alert.setContentText("Please fill Login Info Correctly.");
+				alert.showAndWait();
+				break;
+			case Protocol.T2_CD1_SUCCESS:
+				Parent UserRegister = FXMLLoader.load(getClass().getResource("../View/MyPage.fxml"));
+				Scene scene = new Scene(UserRegister);
+				Stage primaryStage = (Stage)btnLogin.getScene().getWindow();
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("마이페이지");
+				break;
+			}
 			
-			Parent UserRegister = FXMLLoader.load(getClass().getResource("../View/MyPage.fxml"));
-			Scene scene = new Scene(UserRegister);
-			Stage primaryStage = (Stage)btnLogin.getScene().getWindow();
-			primaryStage.setScene(scene);
-			primaryStage.setTitle("마이페이지");
+			
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

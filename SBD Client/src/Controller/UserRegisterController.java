@@ -130,7 +130,7 @@ public class UserRegisterController implements Initializable {
 			
 			Check.isFill(ID,PW,NAME,SEX,BIRTHDAY, PHONE, ADDR1, ADDR2);
 			
-			String body = ID + PW + NAME + SEX + BIRTHDAY + PHONE + ADDR1 + ADDR2;
+			String body = ID +"/"+ PW +"/"+ NAME +"/"+ SEX +"/"+ BIRTHDAY +"/"+ PHONE +"/"+ ADDR1 +"/"+ ADDR2;
 			
 			Protocol p = new Protocol();
 			// message passing - send
