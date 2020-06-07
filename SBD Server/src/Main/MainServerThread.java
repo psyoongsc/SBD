@@ -8,16 +8,15 @@ import java.sql.Connection;
 import Model.Protocol;
 
 public class MainServerThread extends Thread{
-	private MainServer server = null;
-	private Socket socket = null;
-	private int ID = -1;
-	private InputStream is = null;
-	private OutputStream os= null;
-	private Protocol protocol = null;
-	private Connection conn = null;
+	private MainServer server;
+	private Socket socket;
+	private int ID;
+	private InputStream is;
+	private OutputStream os;
+	private Protocol protocol;
+	private Connection conn;
 	
 	public MainServerThread(MainServer _server, Socket _socket, Connection _conn) {
-		super();
 		server = _server;
 		socket = _socket;
 		ID = socket.getPort();
@@ -57,7 +56,6 @@ public class MainServerThread extends Thread{
 			System.out.println(ID + " has closed.");
 			stop();
 		}
-		
 	}
 	
 	public void open() throws IOException {

@@ -12,54 +12,43 @@ import Handler.RegisterHandler;
 import Handler.ViewHandler;
 import Model.Protocol;
 
-public class MainServer implements Runnable {
-	private MainServerThread clients[] = new MainServerThread[50];
-	private ServerSocket server = null;
-	private Thread thread = null;
-	private int clientCount = 0;
-	
-	private OutputStream os = null;
-	private Protocol protocol = null;
+public class MainServer extends Thread {
+	private MainServerThread clients[];
+	private ServerSocket server;
+	private int clientCount;
+	private OutputStream os;
+	private Protocol protocol;
 	
 	public MainServer(int port) {
 		try {
 			protocol = new Protocol();
+			clients = new MainServerThread[50];
+			clientCount = 0;
 			
 			System.out.println("Binding to port " + port + ", please wait ...");
 			server = new ServerSocket(port);
 			System.out.println("Server started: " + server);
-			start();
 		} catch (IOException ioe) {
 			System.out.println("Can't bind to port " + port + " : " + ioe.getMessage());
 		}
 	}
 	
 	public void run() {
-		while(thread != null) {
-			try {
-				System.out.println("Server is ready for clients ...");
-				
-				Class.forName("com.mysql.jdbc.Driver");
-				String url = "jdbc:mysql://127.0.0.1:3307/sbd?useUnicode=true&characterEncoding=utf8";
-				Connection conn = DriverManager.getConnection(url, "root", "123123");
-				System.out.println("DB연결 성공");
-				
-				addThread(server.accept(), conn);
-			} catch (IOException ioe) {
-				System.out.println("Server Error accept: " + ioe.getMessage());
-				stop();
-			} catch (ClassNotFoundException cnfe) {
-				System.out.println("드라이버 로딩 실패");
-			} catch (SQLException sqle) {
-				System.out.println("에러: " + sqle);
-			}
-		}
-	}
-	
-	public void start() {
-		if (thread == null) {
-			thread = new Thread(this);
-			thread.start(); // run() 함수를 암묵적으로 호출
+		try {
+			System.out.println("Server is ready for clients ...");
+			
+			Class.forName("com.mysql.jdbc.Driver");
+			String url = "jdbc:mysql://127.0.0.1:3307/sbd?useUnicode=true&characterEncoding=utf8";
+			Connection conn = DriverManager.getConnection(url, "root", "123123");
+			System.out.println("DB연결 성공");
+			
+			addThread(server.accept(), conn);
+		} catch (IOException ioe) {
+			System.out.println("Server Error accept: " + ioe.getMessage());
+		} catch (ClassNotFoundException cnfe) {
+			System.out.println("드라이버 로딩 실패");
+		} catch (SQLException sqle) {
+			System.out.println("에러: " + sqle);
 		}
 	}
 	
@@ -81,13 +70,6 @@ public class MainServer implements Runnable {
 			clientCount--;
 			toTerminate.close();
 			toTerminate.stop();
-		}
-	}
-	
-	public void stop() {
-		if (thread != null) {
-			thread.stop();
-			thread = null;
 		}
 	}
 	
@@ -142,6 +124,7 @@ public class MainServer implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		MainServer server = new MainServer(3333);
+		Thread mServer = new MainServer(3333);
+		mServer.start();
 	}
 }

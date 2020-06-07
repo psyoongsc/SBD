@@ -14,7 +14,7 @@ public class Network {
 	Network(){
 		System.out.println("Establishing connection. Please wait ...");
 		try {
-			socket = new Socket("172.20.10.3", 3333);
+			socket = new Socket("localhost", 3333);
 			System.out.println("Connected: " + socket);
 			t_start();
 		} catch (UnknownHostException uhe) {
