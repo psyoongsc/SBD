@@ -25,7 +25,6 @@ public class MainServer extends Thread {
 			protocol = new Protocol();
 			clients = new MainServerThread[50];
 			clientCount = 0;
-			
 			System.out.println("Binding to port " + port + ", please wait ...");
 			server = new ServerSocket(port);
 			System.out.println("Server started: " + server);

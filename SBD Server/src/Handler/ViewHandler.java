@@ -106,48 +106,30 @@ public class ViewHandler {
 //		output.flush();
 //	}
 //	
-//	public void CODE2(Protocol protocol) throws IOException{
-//		PreparedStatement pstmt = null;
-//		ResultSet rs = null;
-//		StringBuilder sb = new StringBuilder();
-//		Protocol packet = new Protocol(Protocol.UNDEFINED);
-//		
-//		String sql = "select b.ID, b.Team_Name\r\n" + 
-//				"from team_member a, team b\r\n" + 
-//				"where User_ID = ? AND a.Team_ID = b.ID;";
-//		
-//		try {
-//			pstmt = conn.prepareStatement(sql);
-//			pstmt.setString(1, new String(protocol.getBody()).trim());
-//			rs = pstmt.executeQuery();
-//		
-//			if(rs.next()) {
-//				while(true) {
-//					sb.append(rs.getInt(1) + "/");
-//					sb.append(rs.getString(2));
-//					
-//					if(rs.next())
-//						sb.append("/");
-//					else
-//						break;
-//				}
-//			}
-//		} catch(SQLException sqle) {
-//			packet = new Protocol(Protocol.TYPE6_VIEW_RES, Protocol.T6_FAIL);
-//			sqle.printStackTrace();
-//			output.write(packet.getPacket());
-//			output.flush(); 
-//		}
-//		
-//		packet = new Protocol(Protocol.TYPE6_VIEW_RES, Protocol.T6_CD2_TEAM);
-//		try {
-//			packet.setBody(sb.toString().trim().getBytes());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		output.write(packet.getPacket());
-//		output.flush();
-//	}
+	public void CODE2(Protocol protocol)throws Exception{
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String rq = "";
+		
+		String sql = "SELECT ID, Team_Name FROM team as a, team_member as b WHERE a.ID=b.Team_ID and User_ID=?";
+			
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, protocol.getString());
+		rs = pstmt.executeQuery();
+			
+		if(rs.next()){
+			rq += rs.getInt(1)+"/"+rs.getString(2);
+		}
+		while(rs.next()){
+			rq += "/"+rs.getInt(1)+"/"+rs.getString(2);
+		}
+		
+		Protocol packet = new Protocol(Protocol.TYPE6_VIEW_RES, Protocol.T6_CD2_TEAM);
+		packet.setString(rq);
+		output.write(packet.getPacket());
+		output.flush();
+	}
 //	
 //	public void CODE3(Protocol protocol) throws IOException{
 //		PreparedStatement pstmt = null;

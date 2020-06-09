@@ -1,6 +1,8 @@
 package Controller;
 
 import application.Network;
+import application.UserData;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -85,6 +87,8 @@ public class LoginController implements Initializable {
 				alert.showAndWait();
 				break;
 			case Protocol.T2_CD1_SUCCESS:
+				UserData.setUserid(ID);
+				setUserData(ID);
 				Parent UserRegister = FXMLLoader.load(getClass().getResource("../View/MyPage.fxml"));
 				Scene scene = new Scene(UserRegister);
 				Stage primaryStage = (Stage)btnLogin.getScene().getWindow();
@@ -98,5 +102,23 @@ public class LoginController implements Initializable {
 		}
 	}
 	
+	
+	private void setUserData(String uid) throws IOException{
+		Protocol p = new Protocol();
+		// message passing - send
+		p.setType(Protocol.TYPE5_VIEW_REQ);
+		p.setCode(Protocol.T5_CD2_TEAM);
+		p.setString(uid);
+		Network.send(p);
+		Check.printPacket(p);
+
+		// message passing - receive
+		p = Network.read();
+		String[] str = p.getString().split("/");
+		for(int i=0; i<str.length; i+=2){
+			UserData.setTeam(Integer.parseInt(str[i]), str[i+1]);
+		}
+		UserData.printTeam();
+	}
 	
 }

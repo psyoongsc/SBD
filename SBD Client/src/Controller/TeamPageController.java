@@ -28,6 +28,9 @@ public class TeamPageController implements Initializable {
 	@FXML private Button recruit;
 	@FXML private Button join;
 	
+	private String userid;
+	private int[] teamid;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub

@@ -21,6 +21,9 @@ public class MatchingPageController implements Initializable {
 	@FXML private Circle team;
 	@FXML private ImageView team1;
 	
+	private String userid;
+	private int[] teamid;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub

@@ -25,19 +25,6 @@ public class MainServerThread extends Thread{
 	
 	public int getID() { return ID; }
 	
-	public void send(byte[] packet) {
-		try {
-			os.write(packet);
-			os.flush();
-		} catch (IOException ioe) {
-			System.out.println(ID + " Error sending: " + ioe.getMessage());
-			server.remove(ID);
-			close();
-			System.out.println(ID + " has closed.");
-			stop();
-		}
-	}
-	
 	public void run() {
 		System.out.println("Server Thread " + ID + " running.");
 		try {
@@ -52,8 +39,8 @@ public class MainServerThread extends Thread{
 				
 				server.handle(os, ID, protocol, conn);
 			}
-		} catch (Exception ioe) {
-			System.out.println(ID + " Error reading: " + ioe.getMessage());
+		}catch (Exception ioe) {
+			System.out.println(ID + " Error: " + ioe.getMessage());
 			server.remove(ID);
 			close();
 			System.out.println(ID + " has closed.");

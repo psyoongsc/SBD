@@ -33,6 +33,9 @@ public class MyPageController implements Initializable {
 	@FXML private TableColumn datetime;
 	@FXML private TableColumn attribute;
 	@FXML private TableColumn value;
+
+	private String userid;
+	private int[] teamid;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
