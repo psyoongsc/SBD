@@ -42,10 +42,13 @@ public class MainServerThread extends Thread{
 		System.out.println("Server Thread " + ID + " running.");
 		try {
 			while(true) {
-				byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
-				is.read(buf);
 				protocol = new Protocol();
-				protocol.setPakcet(buf);
+				byte[] head = new byte[protocol.LEN_HEADER];
+				is.read(head);
+				protocol.setHeader(head);
+				byte[] body = new byte[protocol.getBodyLength()];
+				is.read(body);
+				protocol.setBody(body);
 				
 				server.handle(os, ID, protocol, conn);
 			}

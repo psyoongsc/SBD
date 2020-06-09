@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import Handler.CheckHandler;
 import Handler.LoginHandler;
 import Handler.RegisterHandler;
 import Handler.ViewHandler;
@@ -37,9 +38,9 @@ public class MainServer extends Thread {
 		try {
 			System.out.println("Server is ready for clients ...");
 			
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://127.0.0.1:3307/sbd?useUnicode=true&characterEncoding=utf8";
-			Connection conn = DriverManager.getConnection(url, "root", "123123");
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			String url = "jdbc:mysql://localhost:3306/sbd?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false";
+			Connection conn = DriverManager.getConnection(url, "root", "fjssj258");
 			System.out.println("DB연결 성공");
 			
 			addThread(server.accept(), conn);
@@ -92,11 +93,12 @@ public class MainServer extends Thread {
 		int packetType = p.getType();
 		
 		System.out.printf("%d %d %d %d %d %d\n", p.getType(), p.getCode(), p.getBodyLength(), p.getFrag(), p.getIsLast(), p.getSeqNum());
-		System.out.println(new String(p.getBody()).trim());
+		System.out.println(p.getString());
 		
 		LoginHandler lh = new LoginHandler(os, conn);
 		ViewHandler vh = new ViewHandler(os, conn);
 		RegisterHandler rh = new RegisterHandler(os, conn);
+		CheckHandler ch = new CheckHandler(os,conn);
 		
 		switch(packetType) {
 		case Protocol.TYPE1_LOGIN_REQ:
@@ -114,17 +116,29 @@ public class MainServer extends Thread {
 			switch(p.getCode()) {
 			case Protocol.T5_CD11_ADDRESS:
 				System.out.println(ID + " : Request View Address");
-				vh.CODE10(p);
+				vh.CODE11(p);
 				break;
 			case Protocol.T5_CD12_ADDRESSSPECIFIC:
 				System.out.println(ID + " : Request View Address Specific");
-				vh.CODE11(p);
+				vh.CODE12(p);
+			}
+			
+		case Protocol.TYPE11_CHECK_REQ:
+			switch(p.getCode()) {
+			case Protocol.T11_CD0_USERID:
+				System.out.println(ID + " : Request Check UserID");
+				ch.CODE0(p);
+				break;
+			case Protocol.T11_CD1_TEAMNAME:
+				System.out.println(ID + " : Request Check TeamName");
+				//ch.CODE1(p);
 			}
 		}
+		
 	}
 	
 	public static void main(String[] args) {
-		Thread mServer = new MainServer(3333);
+		Thread mServer = new MainServer(3434);
 		mServer.start();
 	}
 }

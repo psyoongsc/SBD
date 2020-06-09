@@ -33,7 +33,7 @@ public class LoginController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-
+		
 		// 로그인 버튼 핸들러
 		btnLogin.setOnAction(event -> {
 			handleBtnLoginAction(event);
@@ -60,34 +60,23 @@ public class LoginController implements Initializable {
 	
 	public void handleBtnLoginAction(ActionEvent event){
 		try {
-			String ID = txtID.getText().trim();
-			String PW = txtPW.getText().trim();
+			String ID = txtID.getText();
+			String PW = txtPW.getText();
 
 			Check.isFill(ID, PW);
 
 			Protocol p = new Protocol();
 			// message passing - send
-			// set head
 			p.setType(Protocol.TYPE1_LOGIN_REQ);
-			// set body
-			p.setBody((ID + "/" + PW).getBytes());
-			// send
-			Network.os.write(p.getPacket());
-			Network.os.flush();
-			// printPakcet
+			p.setString(ID+"/"+PW);
+			Network.send(p);
 			Check.printPacket(p);
 
 			// message passing - receive
-			// read buf
-			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
-			Network.is.read(buf);
-			// set Protocol
-			p.setPakcet(buf);
-			// get Type
-			int packetType = p.getType();
+			p = Network.read();
 			Check.printPacket(p);
 
-			switch (packetType) {
+			switch (p.getCode()) {
 			case Protocol.T2_CD0_FAIL:
 				Alert alert = new Alert(AlertType.WARNING);
 				alert.setTitle("Warning");
@@ -103,9 +92,6 @@ public class LoginController implements Initializable {
 				primaryStage.setTitle("마이페이지");
 				break;
 			}
-			
-			
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

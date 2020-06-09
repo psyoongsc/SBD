@@ -6,17 +6,21 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import Model.Protocol;
+
 public class Network {
-	public static OutputStream os;
-	public static InputStream is;
-	public static Socket socket;
+	private static OutputStream os;
+	private static InputStream is;
+	private static Socket socket;
 	
-	Network(){
+	public static void Connection(){
 		System.out.println("Establishing connection. Please wait ...");
 		try {
-			socket = new Socket("localhost", 3333);
+			socket = new Socket("localhost", 3434);
 			System.out.println("Connected: " + socket);
-			t_start();
+			is = socket.getInputStream();
+			os = socket.getOutputStream();
+			System.out.println("This client binding to server using port: " + socket.getPort());
 		} catch (UnknownHostException uhe) {
 			System.out.println("Host unknown: " + uhe.getMessage());
 			System.exit(0);
@@ -26,12 +30,24 @@ public class Network {
 		}
 	}
 	
-	public static void t_start() throws IOException {
-		is = socket.getInputStream();
-		os = socket.getOutputStream();
-		System.out.println("This client binding to server using port: " + socket.getPort());
+	public static Protocol read() throws IOException{
+		Protocol p = new Protocol();
+		byte[] header = new byte[Protocol.LEN_HEADER];
+		is.read(header);
+		p.setHeader(header);
+		if(p.getBodyLength()!=0){
+			byte[] body = new byte[p.getBodyLength()];
+			is.read(body);
+			p.setBody(body);
+		}
+		return p;
 	}
 
+	public static void send(Protocol p) throws IOException{
+		os.write(p.getPacket());
+		os.flush();
+	}
+	
 	public static void t_stop() {
 		try {
 			if (is != null)

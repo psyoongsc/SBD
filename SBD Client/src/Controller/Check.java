@@ -10,7 +10,9 @@ public class Check {
 	public static void printPacket(Protocol p) {
 		System.out.printf("%d %d %d %d %d %d\n", p.getType(), p.getCode(), p.getBodyLength(), p.getFrag(),
 				p.getIsLast(), p.getSeqNum());
-		System.out.println(new String(p.getBody()));
+		if(p.getBodyLength()!=0){
+			System.out.println(p.getString());			
+		}
 	}
 	
 	//isFill

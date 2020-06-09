@@ -23,33 +23,23 @@ public class CheckHandler {
 	public void CODE0(Protocol protocol) throws IOException{
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		Protocol packet = new Protocol(Protocol.UNDEFINED);
+		Protocol packet = new Protocol();
 		
-		String sql = "SELECT * FROM user WHERE ID=?";
+		String sql = "select id from sbd.user where sbd.user.id = ?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, new String(protocol.getBody()).trim());
+			pstmt.setString(1, protocol.getString());
 			rs = pstmt.executeQuery();
 			
 			if(rs.next())
 			{
-				packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD1_SUCCESS);
-				try {
-					packet.setBody("1".getBytes());
-				} catch (Exception e) {
-					System.out.println(e);
-					e.printStackTrace();
-				}
+				packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD0_FAIL);
+				
 			} else {
 				packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD1_SUCCESS);
-				try {
-					packet.setBody("-1".getBytes());
-				} catch (Exception e) {
-					System.out.println(e);
-					e.printStackTrace();
-				}
 			}
+			
 		} catch(SQLException sqle) {
 			packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD0_FAIL);
 			sqle.printStackTrace();
@@ -61,44 +51,44 @@ public class CheckHandler {
 		output.flush();
 	}
 	
-	public void CODE1(Protocol protocol) throws IOException{
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		Protocol packet = new Protocol(Protocol.UNDEFINED);
-		
-		String sql = "SELECT * FROM team WHERE Team_Name=?";
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, new String(protocol.getBody()).trim());
-			rs = pstmt.executeQuery();
-			
-			if(rs.next())
-			{
-				packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD1_SUCCESS);
-				try {
-					packet.setBody("1".getBytes());
-				} catch (Exception e) {
-					System.out.println(e);
-					e.printStackTrace();
-				}
-			} else {
-				packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD1_SUCCESS);
-				try {
-					packet.setBody("-1".getBytes());
-				} catch (Exception e) {
-					System.out.println(e);
-					e.printStackTrace();
-				}
-			}
-		} catch(SQLException sqle) {
-			packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD0_FAIL);
-			sqle.printStackTrace();
-			output.write(packet.getPacket());
-			output.flush(); 
-		}
-		
-		output.write(packet.getPacket());
-		output.flush();
-	}
+//	public void CODE1(Protocol protocol) throws IOException{
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		Protocol packet = new Protocol(Protocol.UNDEFINED);
+//		
+//		String sql = "SELECT * FROM team WHERE Team_Name=?";
+//		
+//		try {
+//			pstmt = conn.prepareStatement(sql);
+//			pstmt.setString(1, new String(protocol.getBody()).trim());
+//			rs = pstmt.executeQuery();
+//			
+//			if(rs.next())
+//			{
+//				packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD1_SUCCESS);
+//				try {
+//					packet.setBody("1".getBytes());
+//				} catch (Exception e) {
+//					System.out.println(e);
+//					e.printStackTrace();
+//				}
+//			} else {
+//				packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD1_SUCCESS);
+//				try {
+//					packet.setBody("-1".getBytes());
+//				} catch (Exception e) {
+//					System.out.println(e);
+//					e.printStackTrace();
+//				}
+//			}
+//		} catch(SQLException sqle) {
+//			packet = new Protocol(Protocol.TYPE12_CHECK_RES, Protocol.T12_CD0_FAIL);
+//			sqle.printStackTrace();
+//			output.write(packet.getPacket());
+//			output.flush(); 
+//		}
+//		
+//		output.write(packet.getPacket());
+//		output.flush();
+//	}
 }

@@ -1,10 +1,19 @@
 package Controller;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.xml.crypto.dsig.keyinfo.PGPData;
 
 import Model.Protocol;
 import application.Network;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,6 +21,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -37,7 +48,7 @@ public class UserRegisterController implements Initializable {
 	@FXML private ComboBox addr1;
 	@FXML private ComboBox addr2;
 	@FXML private Button register;
-    
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
@@ -62,8 +73,7 @@ public class UserRegisterController implements Initializable {
 		});
 	}
 	
-	
-	
+		
 	public void handleLoginAction(ActionEvent event){
 		try{
 			Parent Login = FXMLLoader.load(getClass().getResource("../View/Login.fxml"));
@@ -84,33 +94,32 @@ public class UserRegisterController implements Initializable {
 
 			Protocol p = new Protocol();
 			// message passing - send
-			//p.setType();
-			p.setBody((ID).getBytes());
-			Network.os.write(p.getPacket());
-			Network.os.flush();
+			p.setType(Protocol.TYPE11_CHECK_REQ);
+			p.setCode(Protocol.T11_CD0_USERID);
+			p.setString(ID);
+			Network.send(p);
+			Check.printPacket(p);
 
 			// message passing - receive
-			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
-			Network.is.read(buf);
-			p.setPakcet(buf);
-			int packetType = p.getType();
-
-//			switch (packetType) {
-//			case Protocol.T2_CD0_FAIL:
-//				Alert alert = new Alert(AlertType.WARNING);
-//				alert.setTitle("Warning");
-//				alert.setHeaderText("Warning!!");
-//				alert.setContentText("Please fill Login Info Correctly.");
-//				alert.showAndWait();
-//				break;
-//			case Protocol.T2_CD1_SUCCESS:
-//				alert = new Alert(AlertType.INFORMATION);
-//				alert.setTitle("Information");
-//				alert.setHeaderText("Login Success");
-//				alert.setContentText("Welcome");
-//				alert.showAndWait();
-//				break;
-//			}
+			p = Network.read();
+			Check.printPacket(p);
+			
+			switch (p.getCode()) {
+			case Protocol.T2_CD0_FAIL:
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("중복된 ID입니다");
+				alert.setHeaderText("중복된 ID입니다");
+				alert.setContentText("중복된 ID입니다");
+				alert.showAndWait();
+				break;
+			case Protocol.T2_CD1_SUCCESS:
+				Alert alert1 = new Alert(AlertType.WARNING);
+				alert1.setTitle("사용가능한 ID입니다");
+				alert1.setHeaderText("사용가능한 ID입니다");
+				alert1.setContentText("사용가능한 ID입니다");
+				alert1.showAndWait();
+				break;
+			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -119,12 +128,12 @@ public class UserRegisterController implements Initializable {
 	
 	public void handleRegisterAction(ActionEvent event){
 		try{
-			String ID = id.getText().trim();
-			String PW = pw.getText().trim();
-			String NAME = name.getText().trim();
+			String ID = id.getText();
+			String PW = pw.getText();
+			String NAME = name.getText();
 			String SEX = (String) sex.getSelectedToggle().getUserData();
 			String BIRTHDAY = birthday.getValue().toString();
-			String PHONE = phone.getText().trim();
+			String PHONE = phone.getText();
 			String ADDR1 = (String) addr1.getValue();
 			String ADDR2 = (String) addr2.getValue();
 			
@@ -134,33 +143,30 @@ public class UserRegisterController implements Initializable {
 			
 			Protocol p = new Protocol();
 			// message passing - send
-			//p.setType();
-			p.setBody(body.getBytes());
-			Network.os.write(p.getPacket());
-			Network.os.flush();
-
+			p.setType(Protocol.TYPE3_REGISTER_REQ);
+			p.setCode(Protocol.T3_CD0_USER);
+			p.setString(body);
+			Network.send(p);
+			
 			// message passing - receive
-			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
-			Network.is.read(buf);
-			p.setPakcet(buf);
-			int packetType = p.getType();
+			p = Network.read();
 
-//			switch (packetType) {
-//			case Protocol.T2_CD0_FAIL:
-//				Alert alert = new Alert(AlertType.WARNING);
-//				alert.setTitle("Warning");
-//				alert.setHeaderText("Warning!!");
-//				alert.setContentText("Please fill Login Info Correctly.");
-//				alert.showAndWait();
-//				break;
-//			case Protocol.T2_CD1_SUCCESS:
-//				alert = new Alert(AlertType.INFORMATION);
-//				alert.setTitle("Information");
-//				alert.setHeaderText("Login Success");
-//				alert.setContentText("Welcome");
-//				alert.showAndWait();
-//				break;
-//			}
+			switch (p.getCode()) {
+			case Protocol.T2_CD0_FAIL:
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("회원등록 실패");
+				alert.setHeaderText("회원등록 실패");
+				alert.setContentText("회원등록 실패");
+				alert.showAndWait();
+				break;
+			case Protocol.T2_CD1_SUCCESS:
+				Alert alert1 = new Alert(AlertType.WARNING);
+				alert1.setTitle("회원등록 성공");
+				alert1.setHeaderText("회원등록 성공");
+				alert1.setContentText("회원등록 성공");
+				alert1.showAndWait();
+				break;
+			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -169,22 +175,21 @@ public class UserRegisterController implements Initializable {
 	
 	public void handleAddr1Action(MouseEvent event){
 		try{
-			
 			Protocol p = new Protocol();
 			// message passing - send
-			//p.setType();
-			//p.setBody();
-			Network.os.write(p.getPacket());
-			Network.os.flush();
-
-			// message passing - receive
-			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
-			Network.is.read(buf);
-			p.setPakcet(buf);
-			int packetType = p.getType();
-
-			//combobox에 추가하기
+			p.setType(Protocol.TYPE5_VIEW_REQ);
+			p.setCode(Protocol.T5_CD11_ADDRESS);
+			Network.send(p);
+			Check.printPacket(p);
 			
+			// message passing - receive
+			p = Network.read();
+			Check.printPacket(p);
+			
+			String str = p.getString();
+			List<String> addr = Arrays.asList(str.split("/"));
+			ObservableList<String> list = FXCollections.observableArrayList(addr);
+			addr1.setItems(list);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -195,18 +200,20 @@ public class UserRegisterController implements Initializable {
 			
 			Protocol p = new Protocol();
 			// message passing - send
-			//p.setType();
-			//p.setBody();
-			Network.os.write(p.getPacket());
-			Network.os.flush();
+			p.setType(Protocol.TYPE5_VIEW_REQ);
+			p.setCode(Protocol.T5_CD12_ADDRESSSPECIFIC);
+			p.setString((String)addr1.getValue());
+			Network.send(p);
+			Check.printPacket(p);
 
 			// message passing - receive
-			byte[] buf = new byte[Protocol.LEN_PROTOCOL_MAX];
-			Network.is.read(buf);
-			p.setPakcet(buf);
-			int packetType = p.getType();
-
-			//combobox에 추가하기
+			p = Network.read();
+			Check.printPacket(p);
+			
+			String str = p.getString();
+			List<String> addr = Arrays.asList(str.split("/"));
+			ObservableList<String> list = FXCollections.observableArrayList(addr);
+			addr2.setItems(list);
 			
 		}catch(Exception e){
 			e.printStackTrace();

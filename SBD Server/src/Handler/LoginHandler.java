@@ -20,9 +20,9 @@ public class LoginHandler {
 	}
 	
 	public void login(Protocol protocol) throws IOException {
-		String[] temp = (new String(protocol.getBody())).split("/");
-		String id = temp[0].trim();
-		String pw = temp[1].trim();
+		String[] temp = protocol.getString().split("/");
+		String id = temp[0];
+		String pw = temp[1];
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
