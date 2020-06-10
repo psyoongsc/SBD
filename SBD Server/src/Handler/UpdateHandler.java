@@ -1,26 +1,26 @@
-//package Handler;
-//
-//import java.io.IOException;
-//import java.io.InputStream;
-//import java.io.OutputStream;
-//import java.sql.Connection;
-//import java.sql.Date;
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
-//import java.sql.SQLException;
-//
-//import Model.Protocol;
-//
-//public class UpdateHandler {
-//	InputStream input;
-//	OutputStream output;
-//	Connection conn;
-//	
-//	public UpdateHandler(OutputStream os, Connection conn) {
-//		output = os;
-//		this.conn = conn;
-//	}
-//	
+package Handler;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import Main.IO;
+import Model.Protocol;
+
+public class UpdateHandler {
+	IO io;
+	Connection conn;
+	
+	public UpdateHandler(IO io, Connection conn) {
+		this.io = io;
+		this.conn = conn;
+	}
+	
 //	public void CODE0(Protocol protocol) throws IOException {
 //		PreparedStatement pstmt = null;
 //		String[] bodyToken = null;
@@ -141,4 +141,4 @@
 //		output.write(packet.getPacket());
 //		output.flush();
 //	}
-//}
+}

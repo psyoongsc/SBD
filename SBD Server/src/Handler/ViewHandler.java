@@ -8,15 +8,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import Main.IO;
+import Main.MainServerThread;
 import Model.Protocol;
 
 public class ViewHandler {
-	InputStream input;
-	OutputStream output;
+	IO io;
 	Connection conn;
 	
-	public ViewHandler(OutputStream os, Connection conn) {
-		output = os;
+	public ViewHandler(IO io, Connection conn) {
+		this.io = io;
 		this.conn = conn;
 	}
 	
@@ -107,17 +108,13 @@ public class ViewHandler {
 //	}
 //	
 	public void CODE2(Protocol protocol)throws Exception{
-		
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		String rq = "";
-		
-		String sql = "SELECT ID, Team_Name FROM team as a, team_member as b WHERE a.ID=b.Team_ID and User_ID=?";
+		String sql = "SELECT ID, Team_Name FROM sbd.team as a, sbd.team_member as b WHERE a.ID=b.Team_ID and User_ID=?";
 			
-		pstmt = conn.prepareStatement(sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, protocol.getString());
-		rs = pstmt.executeQuery();
-			
+		ResultSet rs = pstmt.executeQuery();
+		
 		if(rs.next()){
 			rq += rs.getInt(1)+"/"+rs.getString(2);
 		}
@@ -125,10 +122,10 @@ public class ViewHandler {
 			rq += "/"+rs.getInt(1)+"/"+rs.getString(2);
 		}
 		
+		System.out.print(rq);
 		Protocol packet = new Protocol(Protocol.TYPE6_VIEW_RES, Protocol.T6_CD2_TEAM);
 		packet.setString(rq);
-		output.write(packet.getPacket());
-		output.flush();
+		io.send(packet);
 	}
 //	
 //	public void CODE3(Protocol protocol) throws IOException{
@@ -500,12 +497,10 @@ public class ViewHandler {
 //	}
 	
 	public void CODE11(Protocol protocol) throws Exception{
-		Statement stmt = null;
-		ResultSet rs = null;
 		
-		stmt = conn.createStatement();
-		rs = stmt.executeQuery("SELECT distinct Addr1 FROM address");
-		
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT distinct Addr1 FROM address");
+	
 		String temp = "";
 		if(rs.next()){
 			temp += rs.getString(1);
@@ -514,19 +509,16 @@ public class ViewHandler {
 			temp += "/" + rs.getString(1);
 		}
 		
+		System.out.println(temp);
 		Protocol packet = new Protocol(Protocol.TYPE6_VIEW_RES, Protocol.T6_CD11_ADDRESS);
 		packet.setString(temp);
-		output.write(packet.getPacket());
-		output.flush();
+		io.send(packet);
 	}
 	
 	public void CODE12(Protocol protocol) throws Exception{
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		pstmt = conn.prepareStatement("select addr2 from address where addr1=?");
+		PreparedStatement pstmt = conn.prepareStatement("select addr2 from address where addr1=?");
 		pstmt.setString(1, protocol.getString());
-		rs = pstmt.executeQuery();
+		ResultSet rs = pstmt.executeQuery();
 		
 		String temp = "";
 		if(rs.next()){
@@ -538,8 +530,7 @@ public class ViewHandler {
 		
 		Protocol packet = new Protocol(Protocol.TYPE6_VIEW_RES, Protocol.T6_CD12_ADDRESSSPECIFIC);
 		packet.setString(temp);
-		output.write(packet.getPacket());
-		output.flush();
+		io.send(packet);
 	}
 	
 //	public void CODE13(Protocol protocol) throws Exception{

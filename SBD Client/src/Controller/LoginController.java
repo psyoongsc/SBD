@@ -115,10 +115,12 @@ public class LoginController implements Initializable {
 		// message passing - receive
 		p = Network.read();
 		String[] str = p.getString().split("/");
-		for(int i=0; i<str.length; i+=2){
-			UserData.setTeam(Integer.parseInt(str[i]), str[i+1]);
+		if(str.length>=2){
+			for(int i=0;i<str.length; i+=2){
+				UserData.setTeam(Integer.parseInt(str[i]), str[i+1]);
+			}
+			UserData.printTeam();
 		}
-		UserData.printTeam();
 	}
 	
 }

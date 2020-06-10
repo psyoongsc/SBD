@@ -1,24 +1,24 @@
-//package Handler;
-//
-//import java.io.IOException;
-//import java.io.InputStream;
-//import java.io.OutputStream;
-//import java.sql.Connection;
-//import java.sql.PreparedStatement;
-//import java.sql.SQLException;
-//
-//import Model.Protocol;
-//
-//public class DeleteHandler {
-//	InputStream input;
-//	OutputStream output;
-//	Connection conn;
-//	
-//	public DeleteHandler(OutputStream os, Connection conn) {
-//		output = os;
-//		this.conn = conn;
-//	}
-//	
+package Handler;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import Main.IO;
+import Model.Protocol;
+
+public class DeleteHandler {
+	IO io;
+	Connection conn;
+	
+	public DeleteHandler(IO io, Connection conn) {
+		this.io = io;
+		this.conn = conn;
+	}
+	
 //	public void CODE0(Protocol protocol) throws IOException {
 //		PreparedStatement pstmt = null;
 //		String[] bodyToken = null;
@@ -49,4 +49,4 @@
 //		output.write(packet.getPacket());
 //		output.flush();
 //	}
-//}
+}

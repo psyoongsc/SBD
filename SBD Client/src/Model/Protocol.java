@@ -193,7 +193,10 @@ public class Protocol {
 
 	// string
 	public String getString() {
-		return new String(body);
+		if(body!=null){
+			return new String(body);
+		}
+		return "";
 	}
 
 	public void setString(String data) {
@@ -204,7 +207,10 @@ public class Protocol {
 
 	// Body
 	public byte[] getBody() {
-		return body;
+		if(body!=null){
+			return body;
+		}
+		return new byte[1];
 	}
 
 	public void setBody(byte[] bd) {

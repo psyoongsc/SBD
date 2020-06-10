@@ -88,7 +88,7 @@ public class UserRegisterController implements Initializable {
 	
 	public void handleCheckAction(ActionEvent event){
 		try{
-			String ID = id.getText().trim();
+			String ID = id.getText();
 			
 			Check.isFill(ID);
 
