@@ -133,7 +133,7 @@ public class MainServerThread extends Thread {
 				vh.CODE12(p);
 				break;
 			case Protocol.T5_CD13_GYM:
-				// vh.CODE13(p);
+				vh.CODE13(p);
 				break;
 			case Protocol.T5_CD14_MYRECRUIT:
 				// vh.CODE14(p);
@@ -181,7 +181,7 @@ public class MainServerThread extends Thread {
 				ch.CODE0(p);
 				break;
 			case Protocol.T11_CD1_TEAMNAME:
-				// ch.CODE1(p);
+				ch.CODE1(p);
 				break;
 			}
 			break;

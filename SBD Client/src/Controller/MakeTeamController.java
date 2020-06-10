@@ -28,8 +28,8 @@ public class MakeTeamController implements Initializable {
 	@FXML private ComboBox addr1;
 	@FXML private ComboBox addr2;
 	@FXML private ComboBox gym;
-	@FXML private ComboBox minage;
-	@FXML private ComboBox maxage;
+	@FXML private TextField minage;
+	@FXML private TextField maxage;
 	@FXML private ComboBox addr;
 	@FXML private ToggleGroup sex;
 	@FXML private TextArea td;
@@ -52,7 +52,7 @@ public class MakeTeamController implements Initializable {
 		});
 		
 		gym.setOnMouseClicked(event ->{
-			handleGymAction(event);
+			//handleGymAction(event);
 		});
 		
 		addr.setOnMouseClicked(event ->{
@@ -60,13 +60,13 @@ public class MakeTeamController implements Initializable {
 		});
 		
 		tr.setOnAction(event->{
-			handleTrAction(event);
+			//handleTrAction(event);
 		});
 	}
 	
 	public void handleCheckAction(ActionEvent event){
 		try{
-			String ID = tid.getText().trim();
+			String ID = tid.getText();
 			
 			Check.isFill(ID);
 
@@ -83,14 +83,14 @@ public class MakeTeamController implements Initializable {
 			Check.printPacket(p);
 			
 			switch (p.getCode()) {
-			case Protocol.T2_CD0_FAIL:
+			case Protocol.T12_CD0_FAIL:
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("중복된 ID입니다");
 				alert.setHeaderText("중복된 ID입니다");
 				alert.setContentText("중복된 ID입니다");
 				alert.showAndWait();
 				break;
-			case Protocol.T2_CD1_SUCCESS:
+			case Protocol.T12_CD1_SUCCESS:
 				Alert alert1 = new Alert(AlertType.WARNING);
 				alert1.setTitle("사용가능한 ID입니다");
 				alert1.setHeaderText("사용가능한 ID입니다");
@@ -152,6 +152,23 @@ public class MakeTeamController implements Initializable {
 	
 	public void handleGymAction(MouseEvent event){
 		try{
+			Protocol p = new Protocol();
+			// message passing - send
+			p.setType(Protocol.TYPE5_VIEW_REQ);
+			p.setCode(Protocol.T5_CD13_GYM);
+			p.setString((String)addr1.getValue()+"/"+(String)addr2.getValue());
+			Network.send(p);
+			Check.printPacket(p);
+
+			// message passing - receive
+			p = Network.read();
+			Check.printPacket(p);
+			
+			//값넣기
+			String str = p.getString();
+			List<String> addr = Arrays.asList(str.split("/"));
+			ObservableList<String> list = FXCollections.observableArrayList(addr);
+			addr2.setItems(list);
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -180,11 +197,11 @@ public class MakeTeamController implements Initializable {
 		}
 	}
 	
-	public void handleTrAction(ActionEvent event){
-		try{
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
+//	public void handleTrAction(ActionEvent event){
+//		try{
+//			
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//	}
 }
