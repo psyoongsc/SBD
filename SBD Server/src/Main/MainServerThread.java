@@ -31,13 +31,14 @@ public class MainServerThread extends Thread {
 
 	@Override
 	public void run() {
-		try {
-			while (true) {
+		while (true) {
+			try {
 				p = io.read();
 				handle(p);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				this.stop();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -68,7 +69,7 @@ public class MainServerThread extends Thread {
 				rh.CODE0(p);
 				break;
 			case Protocol.T3_CD1_TEAM:
-				// rh.CODE1(p);
+				rh.CODE1(p);
 				break;
 			case Protocol.T3_CD2_TEAMNOTICE:
 				// rh.CODE2(p);

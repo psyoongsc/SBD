@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.ResourceBundle;
 
 import Model.Protocol;
 import application.Network;
+import application.UserData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -52,7 +54,7 @@ public class MakeTeamController implements Initializable {
 		});
 		
 		gym.setOnMouseClicked(event ->{
-			//handleGymAction(event);
+			handleGymAction(event);
 		});
 		
 		addr.setOnMouseClicked(event ->{
@@ -60,7 +62,7 @@ public class MakeTeamController implements Initializable {
 		});
 		
 		tr.setOnAction(event->{
-			//handleTrAction(event);
+			handleTrAction(event);
 		});
 	}
 	
@@ -168,7 +170,7 @@ public class MakeTeamController implements Initializable {
 			String str = p.getString();
 			List<String> addr = Arrays.asList(str.split("/"));
 			ObservableList<String> list = FXCollections.observableArrayList(addr);
-			addr2.setItems(list);
+			gym.setItems(list);
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -197,11 +199,52 @@ public class MakeTeamController implements Initializable {
 		}
 	}
 	
-//	public void handleTrAction(ActionEvent event){
-//		try{
-//			
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//	}
+	public void handleTrAction(ActionEvent event){
+		try{
+			
+			String TID = tid.getText();
+			String GYM = (String) gym.getValue();
+			String ID = UserData.getUserid();
+			String MINAGE = minage.getText();
+			String MAXAGE = maxage.getText();
+			String ADDR = (String) addr.getValue();
+			String SEX = (String) sex.getSelectedToggle().getUserData();
+			String TD = td.getText();
+			
+			Check.isFill(TID,GYM,ID,MINAGE,MAXAGE,ADDR,SEX,TD);
+			
+			String body= TID +"/"+ GYM +"/"+ ID +"/"+ MINAGE +"/"+ MAXAGE +"/"+ ADDR +"/"+ SEX +"/"+ TD;
+			
+			Protocol p = new Protocol();
+			// message passing - send
+			p.setType(Protocol.TYPE3_REGISTER_REQ);
+			p.setCode(Protocol.T3_CD1_TEAM);
+			p.setString(body);
+			Network.send(p);
+			
+			// message passing - receive
+			p = Network.read();
+			switch (p.getCode()) {
+			case Protocol.T2_CD0_FAIL:
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("팀등록 실패");
+				alert.setHeaderText("팀등록 실패");
+				alert.setContentText("팀등록 실패");
+				alert.showAndWait();
+				break;
+			case Protocol.T2_CD1_SUCCESS:
+				Alert alert1 = new Alert(AlertType.WARNING);
+				alert1.setTitle("팀등록 성공");
+				alert1.setHeaderText("팀등록 성공");
+				alert1.setContentText("팀등록 성공");
+				alert1.showAndWait();
+				
+				//UserData갱신하기
+				break;
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }

@@ -9,7 +9,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="464.0" prefWidth="557.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="Controller.MakeTeamController">
+<AnchorPane prefHeight="464.0" prefWidth="557.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MakeTeamController">
    <children>
       <AnchorPane prefHeight="464.0" prefWidth="558.0" style="-fx-background-color: #FFE400;">
          <children>
@@ -18,9 +18,9 @@
             <Button fx:id="check" layoutX="354.0" layoutY="40.0" mnemonicParsing="false" text="중복확인" />
             
             <Label layoutX="46.0" layoutY="108.0" text="팀체육관" />
-            <ComboBox fx:id="addr1" layoutX="140.0" layoutY="104.0" prefHeight="22.0" prefWidth="110.0" />
-            <ComboBox fx:id="addr2" layoutX="263.0" layoutY="104.0" prefHeight="22.0" prefWidth="110.0" />
-            <ComboBox fx:id="gym" layoutX="386.0" layoutY="104.0" prefHeight="22.0" prefWidth="110.0" />
+            <ComboBox fx:id="addr1" layoutX="140.0" layoutY="104.0" prefHeight="22.0" prefWidth="99.0" />
+            <ComboBox fx:id="addr2" layoutX="253.0" layoutY="104.0" prefHeight="22.0" prefWidth="99.0" />
+            <ComboBox fx:id="gym" layoutX="366.0" layoutY="104.0" prefHeight="22.0" prefWidth="170.0" />
             
             <Label layoutX="44.0" layoutY="167.0" text="나이제한" />
             <TextField fx:id="minage" layoutX="140.0" layoutY="163.0" prefHeight="22.0" prefWidth="99.0" text="최소나이" />
@@ -35,7 +35,7 @@
                   <ToggleGroup fx:id="sex" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton layoutX="233.0" layoutY="280.0" text="여" toggleGroup="$sex" userData="여"/>
+            <RadioButton layoutX="233.0" layoutY="280.0" text="여" toggleGroup="$sex" userData="여" />
             
             <Label layoutX="44.0" layoutY="341.0" text="팀 소개글" />
             <TextArea fx:id="td" layoutX="138.0" layoutY="323.0" prefHeight="50.0" prefWidth="334.0" />

@@ -558,22 +558,21 @@ public class ViewHandler {
 		String sb = "";
 		Protocol packet;
 
-		PreparedStatement pstmt = conn.prepareStatement("select ID, Gym_Name from gym where addr1=? and addr2=?");
+		PreparedStatement pstmt = conn.prepareStatement("select Gym_Name from sbd.gym where Addr1=? and Addr2=?");
 		pstmt.setString(1, protocol.getString().split("/")[0]);
-		pstmt.setString(1, protocol.getString().split("/")[1]);
+		pstmt.setString(2, protocol.getString().split("/")[1]);
 		ResultSet rs = pstmt.executeQuery();
-
+		
 		if(rs.next()){
-			sb += rs.getInt(1);
-			sb += rs.getString(2);
+			sb += rs.getString(1);
 		}while(rs.next()){
-			sb += "/"+rs.getInt(1);
-			sb += "/"+rs.getString(2);			
+			sb += "/"+rs.getString(1);			
 		}
 
+		System.out.println(sb);
 		packet = new Protocol(Protocol.TYPE6_VIEW_RES, Protocol.T6_CD13_GYM);
-
 		packet.setString(sb);
+		io.send(packet);
 	}
 
 	// public void CODE14(Protocol protocol) throws Exception{

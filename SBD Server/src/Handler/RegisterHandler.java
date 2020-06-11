@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -57,49 +58,47 @@ public class RegisterHandler {
 		io.send(packet);
 	}
 
-	// public void CODE1(Protocol protocol) throws IOException {
-	// PreparedStatement pstmt = null;
-	// int rowsAffected = 0;
-	// Protocol packet = null;
-	//
-	// String[] temp = (new String(protocol.getBody())).trim().split("/");
-	//
-	// String sql = "insert into team(Team_Name, Gym_ID, User_Captain,
-	// Member_Num, Max_Age, Min_Age, Addr1, Addr2, Team_Sex, Team_Intro) "
-	// + "values(?,?,?,?,?,?,?,?,?,?)";
-	//
-	// try {
-	// pstmt = conn.prepareStatement(sql);
-	// pstmt.setString(1, temp[0]); // Team_Name
-	// pstmt.setInt(2, Integer.parseInt(temp[1])); // Gym_ID
-	// pstmt.setString(3, temp[2]); // User_Captain
-	// pstmt.setInt(4, 1); // Mumber_Num (ÆÀ ¸â¹ö´Â ÆÀÀå ÇÑ¸í)
-	// pstmt.setInt(5, Integer.parseInt(temp[3])); // Max_Age
-	// pstmt.setInt(6, Integer.parseInt(temp[4])); // Min_Age
-	// pstmt.setString(7, temp[5]); // Addr1
-	// pstmt.setString(8, temp[6]); // Addr2
-	// pstmt.setString(9, temp[7]); // Team_Sex
-	// pstmt.setString(10, temp[8]); // Team_Intro
-	//
-	// rowsAffected = pstmt.executeUpdate();
-	// } catch(SQLException sqle) {
-	// packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD0_FAIL);
-	// sqle.printStackTrace();
-	// output.write(packet.getPacket());
-	// output.flush();
-	// }
-	//
-	// if(rowsAffected == 1) {
-	// packet = new Protocol(Protocol.TYPE4_REGISTER_RES,
-	// Protocol.T4_CD1_SUCCESS);
-	// } else {
-	// packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD0_FAIL);
-	// }
-	//
-	// output.write(packet.getPacket());
-	// output.flush();
-	// }
-	//
+	public void CODE1(Protocol protocol) throws Exception {
+		int rowsAffected = 0;
+		Protocol packet = null;
+		int gid=0;
+		String[] temp = protocol.getString().split("/");
+		
+		//getID
+		String sql1 = "select ID from sbd.gym where Gym_Name= '"+temp[1]+"'";
+		Statement pstmt1 = conn.createStatement();
+		ResultSet rs = pstmt1.executeQuery(sql1);
+		if(rs.next()){
+			gid = rs.getInt(1);
+		}else{
+			packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD0_FAIL);
+		}
+		
+		//insert
+		String sql = "INSERT INTO `sbd`.`team` (`Team_Name`, `Gym_ID`, `User_Captain`, `Member_Num`, `Max_Age`, `Min_Age`, `Addr1`, `Team_Sex`, `Team_Intro`) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, temp[0]); // Team_Name
+		pstmt.setInt(2, gid); // Gym_ID
+		pstmt.setString(3, temp[2]); // User_Captain
+		pstmt.setInt(4, 1); // Member_Num
+		pstmt.setInt(5, Integer.parseInt(temp[4])); // Max_Age
+		pstmt.setInt(6, Integer.parseInt(temp[3])); // Min_Age
+		pstmt.setString(7, temp[5]); // Addr1
+		pstmt.setString(8, temp[6]); // Team_Sex
+		pstmt.setString(9, temp[7]); // Team_Intro
+		
+		rowsAffected = pstmt.executeUpdate();
+		if (rowsAffected == 1) {
+			packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD1_SUCCESS);
+		} else {
+			packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD0_FAIL);
+		}
+
+		io.send(packet);
+	}
+
 	// public void CODE2(Protocol protocol) throws IOException {
 	// PreparedStatement pstmt = null;
 	// int rowsAffected = 0;
