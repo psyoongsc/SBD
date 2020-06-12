@@ -59,40 +59,57 @@ public class RegisterHandler {
 	}
 
 	public void CODE1(Protocol protocol) throws Exception {
-		int rowsAffected = 0;
 		Protocol packet = null;
-		int gid=0;
 		String[] temp = protocol.getString().split("/");
 		
-		//getID
+		//GymID
 		String sql1 = "select ID from sbd.gym where Gym_Name= '"+temp[1]+"'";
-		Statement pstmt1 = conn.createStatement();
-		ResultSet rs = pstmt1.executeQuery(sql1);
+		Statement stmt1 = conn.createStatement();
+		ResultSet rs = stmt1.executeQuery(sql1);
+		int gid=0;
 		if(rs.next()){
 			gid = rs.getInt(1);
 		}else{
 			packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD0_FAIL);
 		}
 		
-		//insert
-		String sql = "INSERT INTO `sbd`.`team` (`Team_Name`, `Gym_ID`, `User_Captain`, `Member_Num`, `Max_Age`, `Min_Age`, `Addr1`, `Team_Sex`, `Team_Intro`) "
+		//InsertTeam
+		String sql2 = "INSERT INTO `sbd`.`team` (`Team_Name`, `Gym_ID`, `User_Captain`, `Member_Num`, `Max_Age`, `Min_Age`, `Addr1`, `Team_Sex`, `Team_Intro`) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		
-		PreparedStatement pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1, temp[0]); // Team_Name
-		pstmt.setInt(2, gid); // Gym_ID
-		pstmt.setString(3, temp[2]); // User_Captain
-		pstmt.setInt(4, 1); // Member_Num
-		pstmt.setInt(5, Integer.parseInt(temp[4])); // Max_Age
-		pstmt.setInt(6, Integer.parseInt(temp[3])); // Min_Age
-		pstmt.setString(7, temp[5]); // Addr1
-		pstmt.setString(8, temp[6]); // Team_Sex
-		pstmt.setString(9, temp[7]); // Team_Intro
+		PreparedStatement stmt2 = conn.prepareStatement(sql2);
+		stmt2.setString(1, temp[0]); // Team_Name
+		stmt2.setInt(2, gid); // Gym_ID
+		stmt2.setString(3, temp[2]); // User_Captain
+		stmt2.setInt(4, 1); // Member_Num
+		stmt2.setInt(5, Integer.parseInt(temp[4])); // Max_Age
+		stmt2.setInt(6, Integer.parseInt(temp[3])); // Min_Age
+		stmt2.setString(7, temp[5]); // Addr1
+		stmt2.setString(8, temp[6]); // Team_Sex
+		stmt2.setString(9, temp[7]); // Team_Intro
+		int rs2 = stmt2.executeUpdate();
+		if (rs2 != 1) {
+			packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD0_FAIL);
+		}
 		
-		rowsAffected = pstmt.executeUpdate();
-		if (rowsAffected == 1) {
+		//TeamID
+		String sql3 = "SELECT ID FROM sbd.team where Team_Name='"+temp[0]+"'";
+		Statement stmt3 = conn.createStatement();
+		ResultSet rs3 = stmt3.executeQuery(sql3);
+		int tid=0;
+		if(rs3.next()){
+			tid = rs3.getInt(1);
+		}else{
+			packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD0_FAIL);
+		}
+		
+		//insert
+		String sql4 = "INSERT INTO `sbd`.`team_member` (`Team_ID`, `User_ID`) VALUES ('"+tid+"', '"+temp[2]+"')";
+		Statement stmt4 = conn.createStatement();
+		int rs4 = stmt4.executeUpdate(sql4);
+		if(rs4==1){
 			packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD1_SUCCESS);
-		} else {
+		}else{
 			packet = new Protocol(Protocol.TYPE4_REGISTER_RES, Protocol.T4_CD0_FAIL);
 		}
 

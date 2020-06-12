@@ -240,11 +240,33 @@ public class MakeTeamController implements Initializable {
 				alert1.showAndWait();
 				
 				//UserData갱신하기
+				String id = UserData.getUserid();
+				setUserData(id);
 				break;
 			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	
+	private void setUserData(String uid) throws IOException{
+		Protocol p = new Protocol();
+		// message passing - send
+		p.setType(Protocol.TYPE5_VIEW_REQ);
+		p.setCode(Protocol.T5_CD2_TEAM);
+		p.setString(uid);
+		Network.send(p);
+		Check.printPacket(p);
+
+		// message passing - receive
+		p = Network.read();
+		String[] str = p.getString().split("/");
+		if(str.length>=2){
+			for(int i=0;i<str.length; i+=2){
+				UserData.setTeam(Integer.parseInt(str[i]), str[i+1]);
+			}
+			UserData.printTeam();
 		}
 	}
 }
