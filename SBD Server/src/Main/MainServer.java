@@ -34,7 +34,7 @@ public class MainServer {
 			Socket socket = server.accept();
 			// DB연결
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/sbd?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false";
+			String url = "jdbc:mysql://localhost:3307/sbd?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false";
 			Connection conn = DriverManager.getConnection(url, "root", "fjssj258");
 			System.out.println("DB연결 성공");
 			// 새로운쓰레드생성
