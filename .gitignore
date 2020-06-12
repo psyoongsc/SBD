@@ -1,5 +1,9 @@
 RemoteSystemsTempFiles
+<<<<<<< HEAD
 "SBD Server/src/Main"
+=======
+"SBD Server/src/Main/"
+>>>>>>> a87ba32422553ddf778651a37ac18a6eb96233ea
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,java,eclipse
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,java,eclipse
